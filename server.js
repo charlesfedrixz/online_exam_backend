@@ -29,9 +29,23 @@ app.use("/api/admin", adminRoute);
 app.use("/api/exam", examRoute);
 
 app.get("/", (req, res) => {
-  res.send("Server is running");
+  res.json({ message: "Hello World!" });
 });
-module.exports.handler = serverless(app);
+
+app.get("/api/test", (req, res) => {
+  res.json({ status: "working" });
+});
+
+// Add your other routes here...
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something went wrong!" });
+});
+
+// Export for Vercel - this is the key change!
+module.exports = app;
 // app.listen(PORT, () => {
 //   console.log(`Server listening on http://localhost:${PORT}`);
 // });
