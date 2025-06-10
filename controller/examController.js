@@ -186,7 +186,8 @@ const showScore = asyncHandler(async (req, res) => {
       (a) => a.questionId.toString() === q._id.toString()
     );
     return {
-      questionText: q.questionText, // Changed from questionId to questionText
+      questionText: q.questionText,
+      options: q.options, // Changed from questionId to questionText
       selectedAnswer: studentAnswer ? studentAnswer.selectedAnswer : null,
       correctAnswer: q.correctAnswer,
       isCorrect:
