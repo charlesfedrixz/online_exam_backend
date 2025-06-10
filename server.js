@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const studentRoute = require("./routes/studentRoute");
 const adminRoute = require("./routes/adminRoute");
 const examRoute = require("./routes/examRoute");
+const serverless = require("serverless-http");
 
 const app = express();
 const PORT = process.env.PORT || 1999;
@@ -30,7 +31,7 @@ app.use("/api/exam", examRoute);
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
-
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
-});
+module.exports.handler = serverless(app);
+// app.listen(PORT, () => {
+//   console.log(`Server listening on http://localhost:${PORT}`);
+// });
