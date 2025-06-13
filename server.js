@@ -46,34 +46,17 @@ app.use("/api/exam", examRoute);
 //   });
 // });
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "Online Exam API Server",
-    status: "running",
-    dbStatus: isDbConnected ? "Connected" : "Disconnected",
-    time: new Date().toISOString(),
-  });
-});
-
-// app.get("/", async (req, res) => {
-//   let dbStatus = "Disconnected";
-
-//   if (mongoose.connection.readyState === 1) {
-//     dbStatus = "Connected";
-//   } else if (mongoose.connection.readyState === 2) {
-//     // Try waiting a moment if still connecting
-//     await new Promise((resolve) => setTimeout(resolve, 500));
-//     dbStatus =
-//       mongoose.connection.readyState === 1 ? "Connected" : "Connecting...";
-//   }
-
+// app.get("/", (req, res) => {
 //   res.json({
 //     message: "Online Exam API Server",
 //     status: "running",
-//     dbStatus,
+//     dbStatus: isDbConnected ? "Connected" : "Disconnected",
 //     time: new Date().toISOString(),
 //   });
 // });
+app.get("/", (req, res) => {
+  res.json({ message: "API is working!" });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
