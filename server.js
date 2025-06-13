@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 const connectDB = require("./config/db");
 const studentRoute = require("./routes/studentRoute");
 const adminRoute = require("./routes/adminRoute");
@@ -10,32 +11,61 @@ const serverless = require("serverless-http");
 const app = express();
 const PORT = process.env.PORT || 1999;
 
-connectDB().catch((err) => {
-  console.error("Database connection failed:", err.message);
-});
+// Database connection with retry logic
+const MAX_RETRIES = 3;
+let retryCount = 0;
 
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? ["https://online-exam-lemon.vercel.app"]
-        : ["https://online-exam-lemon.vercel.app", "http://localhost:5173"], // Specify allowed origins
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "ngrok-skip-browser-warning",
-      "Accept",
-      "Origin",
-      "X-Requested-With",
-    ],
-    optionsSuccessStatus: 200,
-  })
-);
-//app.options("*", cors());
-app.use(express.json()); // Must be above route handlers
+const connectWithRetry = async () => {
+  try {
+    await connectDB();
+    console.log("Database connected successfully");
+  } catch (err) {
+    if (retryCount < MAX_RETRIES) {
+      retryCount++;
+      console.error(
+        `Database connection failed, retry ${retryCount}/${MAX_RETRIES}:`,
+        err.message
+      );
+      setTimeout(connectWithRetry, 5000);
+    } else {
+      console.error(
+        "Max retries reached, could not connect to database:",
+        err.message
+      );
+      process.exit(1);
+    }
+  }
+};
 
+connectWithRetry();
+
+// CORS configuration
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "production"
+      ? [process.env.PRODUCTION_ORIGIN]
+      : [
+          process.env.PRODUCTION_ORIGIN,
+          process.env.DEVELOPMENT_ORIGIN || "http://localhost:5173",
+        ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "ngrok-skip-browser-warning",
+    "Accept",
+    "Origin",
+    "X-Requested-With",
+    "Access-Control-Allow-Credentials",
+  ],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+
+// Routes
 app.use("/api/student", studentRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/exam", examRoute);
@@ -53,17 +83,19 @@ app.get("/", (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: err });
+  res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
+    ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
+  });
 });
 
+// Local development server
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`Server listening on http://localhost:${PORT}`);
   });
 }
-// Export for Vercel - this is the key change!
+
+// Vercel serverless handler
 module.exports = app;
 module.exports.handler = serverless(app);
-// app.listen(PORT, () => {
-//   console.log(`Server listening on http://localhost:${PORT}`);
-// });
