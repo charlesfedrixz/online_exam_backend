@@ -14,7 +14,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: ["https://online-exam-lemon.vercel.app"], // Specify allowed origins
+    origin: ["https://online-exam-lemon.vercel.app", "http://localhost:5173"], // Specify allowed origins
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "ngrok-skip-browser-warning"],
@@ -46,6 +46,7 @@ app.use((err, req, res, next) => {
 
 // Export for Vercel - this is the key change!
 module.exports = app;
+module.exports.handler = serverless(app);
 // app.listen(PORT, () => {
 //   console.log(`Server listening on http://localhost:${PORT}`);
 // });
