@@ -50,14 +50,10 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/api/test", (req, res) => {
-  res.json({ status: "working" });
-});
-
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
+  res.status(500).json({ message: err });
 });
 
 if (process.env.NODE_ENV !== "production") {
