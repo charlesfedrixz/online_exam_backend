@@ -79,7 +79,10 @@ const listExams = asyncHandler(async (req, res) => {
     "createdBy",
     "name email"
   );
-  res.status(200).json(exams);
+  if (!exams || exams.length === 0) {
+    return res.status(200).json({ message: "No exams found." });
+  }
+  res.status(200).json({ message: "exams listed successfully.", data: exams });
 });
 
 // @desc    Student submits exam answers
