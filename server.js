@@ -40,21 +40,31 @@ const connectWithRetry = async () => {
 connectWithRetry();
 
 // CORS configuration
+const allowedOrigins = [
+  "https://online-exam-lemon.vercel.app",
+  "http://localhost:5173",
+];
+
 const corsOptions = {
-  origin: [
-    process.env.PRODUCTION_ORIGIN,
-    process.env.DEVELOPMENT_ORIGIN || "http://localhost:5173",
-  ],
+  origin: function (origin, callback) {
+    console.log("CORS check for origin:", origin);
+    // Allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("Blocked by CORS:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: [
     "Content-Type",
     "Authorization",
-    "ngrok-skip-browser-warning",
     "Accept",
     "Origin",
+    "ngrok-skip-browser-warning",
     "X-Requested-With",
-    "Access-Control-Allow-Credentials",
   ],
   optionsSuccessStatus: 200,
 };
