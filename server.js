@@ -16,7 +16,10 @@ connectDB().catch((err) => {
 
 app.use(
   cors({
-    origin: ["https://online-exam-lemon.vercel.app", "http://localhost:5173"], // Specify allowed origins
+    origin:
+      process.env.NODE_ENV === "production"
+        ? ["https://online-exam-lemon.vercel.app"]
+        : ["https://online-exam-lemon.vercel.app", "http://localhost:5173"], // Specify allowed origins
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
@@ -39,9 +42,11 @@ app.use("/api/exam", examRoute);
 
 app.get("/", (req, res) => {
   res.json({
-    message: "Hello World!",
+    message: "Online Exam API Server",
+    status: "running",
     dbStatus:
       mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -49,14 +54,44 @@ app.get("/api/test", (req, res) => {
   res.json({ status: "working" });
 });
 
-// Add your other routes here...
-
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Something went wrong!" });
 });
 
+app.use((err, req, res, next) => {
+  console.error("Error:", err.stack);
+
+  // Handle different types of errors
+  if (err.name === "ValidationError") {
+    return res.status(400).json({
+      error: "Validation Error",
+      details: err.message,
+    });
+  }
+
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      error: "Invalid ID format",
+      details: err.message,
+    });
+  }
+
+  // Default error
+  res.status(err.status || 500).json({
+    error: "Internal Server Error",
+    message:
+      process.env.NODE_ENV === "production"
+        ? "Something went wrong!"
+        : err.message,
+  });
+});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`Server listening on http://localhost:${PORT}`);
+  });
+}
 // Export for Vercel - this is the key change!
 module.exports = app;
 module.exports.handler = serverless(app);
