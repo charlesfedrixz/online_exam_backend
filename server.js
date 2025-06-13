@@ -23,14 +23,36 @@ connectDB()
   });
 
 // CORS configuration
+// app.use(
+//   cors({
+//     origin: [
+//       "https://online-exam-lemon.vercel.app",
+//       "https://online-exam-robinsarangthems-projects.vercel.app",
+//       "http://localhost:5173",
+//     ],
+//     credentials: true,
+//   })
+// );
+
+// app.use((req, res, next) => {
+//   console.log('Request origin:', req.headers.origin);
+//   console.log('Request URL:', req.url);
+//   next();
+// });
+
 app.use(
   cors({
     origin: [
       "https://online-exam-lemon.vercel.app",
       "https://online-exam-robinsarangthems-projects.vercel.app",
       "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "https://localhost:5173", // if you use https locally
+      // Add any other frontend URLs you might use
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 app.use(express.json());
