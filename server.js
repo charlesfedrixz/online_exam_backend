@@ -19,7 +19,6 @@ app.use(
     origin: ["https://online-exam-lemon.vercel.app", "http://localhost:5173"], // Specify allowed origins
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    // allowedHeaders: ["Content-Type", "ngrok-skip-browser-warning"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",
