@@ -25,6 +25,8 @@
   ],
   "env": {
     "NODE_ENV": "production",
-    "MONGODB_URL":"mongodb+srv://soniyaK:soniya123@cluster0.hcwsvhc.mongodb.net/test?retryWrites=true&w=majority"
+    "MONGODB_URL":"mongodb+srv://soniyaK:soniya123@cluster0.hcwsvhc.mongodb.net/test?retryWrites=true&w=majority",
+    "PRODUCTION_ORIGIN":"https://online-exam-git-main-robinsarangthems-projects.vercel.app",
+    "DEVELOPMENT_ORIGIN":"http://localhost:5173"
   }
 }

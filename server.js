@@ -67,7 +67,7 @@ app.use("/api/student", studentRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/exam", examRoute);
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.json({
     message: "Online Exam API Server",
     status: "running",
