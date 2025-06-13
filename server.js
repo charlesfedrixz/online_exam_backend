@@ -10,15 +10,25 @@ const serverless = require("serverless-http");
 const app = express();
 const PORT = process.env.PORT || 1999;
 
-connectDB();
+connectDB().catch((err) => {
+  console.error("Database connection failed:", err.message);
+});
 
 app.use(
   cors({
     origin: ["https://online-exam-lemon.vercel.app", "http://localhost:5173"], // Specify allowed origins
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "ngrok-skip-browser-warning"],
-    //allowedHeaders: ["Content-Type", "Authorization"],
+    // allowedHeaders: ["Content-Type", "ngrok-skip-browser-warning"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "ngrok-skip-browser-warning",
+      "Accept",
+      "Origin",
+      "X-Requested-With",
+    ],
+    optionsSuccessStatus: 200,
   })
 );
 //app.options("*", cors());
@@ -29,7 +39,11 @@ app.use("/api/admin", adminRoute);
 app.use("/api/exam", examRoute);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Hello World!" });
+  res.json({
+    message: "Hello World!",
+    dbStatus:
+      mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
+  });
 });
 
 app.get("/api/test", (req, res) => {
