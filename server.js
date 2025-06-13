@@ -25,7 +25,11 @@ connectDB()
 // CORS configuration
 app.use(
   cors({
-    origin: ["https://online-exam-lemon.vercel.app", "http://localhost:5173"],
+    origin: [
+      "https://online-exam-lemon.vercel.app",
+      "https://online-exam-robinsarangthems-projects.vercel.app",
+      "http://localhost:5173",
+    ],
     credentials: true,
   })
 );
