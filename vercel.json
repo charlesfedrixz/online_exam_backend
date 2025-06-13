@@ -3,12 +3,11 @@
   "builds": [
     { "src": "server.js", "use": "@vercel/node" }
   ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "api/server.js" },
-    { "src": "/(.*)", "dest": "server.js" }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/server.js" },
+    { "source": "/(.*)", "destination": "/server.js" }
   ],
   "env": {
-    "NODE_ENV": "production",
-    "MONGODB_URL": "mongodb+srv://soniyaK:soniya123@cluster0.hcwsvhc.mongodb.net/test?retryWrites=true&w=majority"
+    "NODE_ENV": "production"
   }
 }
