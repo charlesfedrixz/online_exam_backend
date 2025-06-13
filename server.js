@@ -14,7 +14,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: ["https://localhost:5173"], // Specify allowed origins
+    origin: ["https://online-exam-lemon.vercel.app"], // Specify allowed origins
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "ngrok-skip-browser-warning"],
