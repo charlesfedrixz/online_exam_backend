@@ -1,13 +1,14 @@
 {
-    "version": 2,
-    "builds": [
-        { "src": "api/server.js", "use": "@vercel/node" }
-    ],
-    "routes": [
-        { "src": "/api/(.*)", "dest": "api/server.js" }
-    ],
-    "env": {
-        "NODE_ENV": "production",
-        "MONGODB_URL": "mongodb+srv://soniyaK:soniya123@cluster0.hcwsvhc.mongodb.net/test?retryWrites=true&w=majority"
-    }
+  "version": 2,
+  "builds": [
+    { "src": "api/server.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "api/server.js" },
+    { "src": "/(.*)", "dest": "api/server.js" }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "MONGODB_URL": "mongodb+srv://soniyaK:soniya123@cluster0.hcwsvhc.mongodb.net/test?retryWrites=true&w=majority"
+  }
 }
