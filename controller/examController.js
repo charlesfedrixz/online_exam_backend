@@ -74,7 +74,11 @@ const editExam = asyncHandler(async (req, res) => {
 // @desc    List all exams
 // @route   GET /api/exams
 const listExams = asyncHandler(async (req, res) => {
-  const exams = await Exam.find().populate("createdBy", "name email");
+  const now = new Date();
+  const exams = await Exam.find({ scheduledAt: { $gt: now } }).populate(
+    "createdBy",
+    "name email"
+  );
   res.status(200).json(exams);
 });
 
