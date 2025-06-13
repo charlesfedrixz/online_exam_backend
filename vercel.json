@@ -25,6 +25,6 @@
   ],
   "env": {
     "NODE_ENV": "production",
-    "MONGODB_URI": "@your-mongodb-uri"
+    "MONGODB_URL":"mongodb+srv://soniyaK:soniya123@cluster0.hcwsvhc.mongodb.net/test?retryWrites=true&w=majority"
   }
 }
