@@ -1,28 +1,15 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "routes/**",
-          "config/**",
-          "models/**"
-        ]
-      }
+    "version": 2,
+    "builds": [
+        { "src": "server.js", "use": "@vercel/node" }
+    ],
+    "routes": [
+        { "src": "/api/(.*)", "dest": "/server.js" }
+    ],
+    "env": {
+        "NODE_ENV": "production",
+        "MONGODB_URL": "mongodb+srv://soniyaK:soniya123@cluster0.hcwsvhc.mongodb.net/test?retryWrites=true&w=majority",
+        "PRODUCTION_ORIGIN": "https://online-exam-git-main-robinsarangthems-projects.vercel.app",
+        "DEVELOPMENT_ORIGIN": "http://localhost:5173"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production",
-    "MONGODB_URL":"mongodb+srv://soniyaK:soniya123@cluster0.hcwsvhc.mongodb.net/test?retryWrites=true&w=majority",
-    "PRODUCTION_ORIGIN":"https://online-exam-git-main-robinsarangthems-projects.vercel.app",
-    "DEVELOPMENT_ORIGIN":"http://localhost:5173"
-  }
 }
