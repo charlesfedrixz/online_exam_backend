@@ -17,7 +17,12 @@ connectDB();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://online-exam-henna.vercel.app"], // Add all allowed origins
+    origin: [
+      "http://localhost:5173",
+      "https://online-exam-henna.vercel.app",
+      "https://online-exam-c7rumm01g-robinsarangthems-projects.vercel.app",
+      "https://online-exam-git-main-robinsarangthems-projects.vercel.app",
+    ], // Add all allowed origins
     credentials: true, // If using cookies or auth headers
   })
 );
