@@ -1,13 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-// const mongoose = require("mongoose");
-// const connectDB = require("./config/db");z
 const studentRoute = require("./routes/studentRoute");
 const adminRoute = require("./routes/adminRoute");
 const examRoute = require("./routes/examRoute");
 const serverless = require("serverless-http");
 const { connectDB, isDbConnected, mongoose } = require("./config/db");
+const { errorHandler } = require("./middleware/errorhandler");
 
 const app = express();
 const PORT = process.env.PORT || 1999;
@@ -22,24 +21,6 @@ connectDB()
     process.exit(1);
   });
 
-// CORS configuration
-// app.use(
-//   cors({
-//     origin: [
-//       "https://online-exam-lemon.vercel.app",
-//       "https://online-exam-robinsarangthems-projects.vercel.app",
-//       "http://localhost:5173",
-//     ],
-//     credentials: true,
-//   })
-// );
-
-// app.use((req, res, next) => {
-//   console.log('Request origin:', req.headers.origin);
-//   console.log('Request URL:', req.url);
-//   next();
-// });
-
 app.use(
   cors({
     origin: [
@@ -51,10 +32,11 @@ app.use(
       // Add any other frontend URLs you might use
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
+app.use(errorHandler);
 app.use(express.json());
 
 // Routes
@@ -62,24 +44,6 @@ app.use("/api/student", studentRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/exam", examRoute);
 
-// app.get("/", (req, res) => {
-//   res.json({
-//     message: "Online Exam API Server",
-//     status: "running",
-//     dbStatus:
-//       mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
-//     time: new Date().toISOString(),
-//   });
-// });
-
-// app.get("/", (req, res) => {
-//   res.json({
-//     message: "Online Exam API Server",
-//     status: "running",
-//     dbStatus: isDbConnected ? "Connected" : "Disconnected",
-//     time: new Date().toISOString(),
-//   });
-// });
 app.get("/", (req, res) => {
   res.json({ message: "API is working!" });
 });
