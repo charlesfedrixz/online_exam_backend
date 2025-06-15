@@ -5,29 +5,15 @@ const studentRoute = require("./routes/studentRoute");
 const adminRoute = require("./routes/adminRoute");
 const examRoute = require("./routes/examRoute");
 const serverless = require("serverless-http");
-const { connectDB, isDbConnected } = require("./config/db");
+const connectDB = require("./config/db");
 const { errorHandler } = require("./middleware/errorhandler");
 
 const app = express();
 const PORT = process.env.PORT || 1999;
 
 // Middleware to ensure database connection before each request
-const ensureDbConnection = async (req, res, next) => {
-  try {
-    if (!isDbConnected()) {
-      console.log("Connecting to database...");
-      await connectDB();
-      console.log("Database connected successfully");
-    }
-    next();
-  } catch (error) {
-    console.error("Database connection error:", error.message);
-    return res.status(500).json({
-      error: "Database connection failed",
-      message: error.message,
-    });
-  }
-};
+
+connectDB();
 
 app.use(
   cors({
@@ -46,17 +32,16 @@ app.use(
 
 app.use(express.json());
 
-// Apply database connection middleware to all routes except health check
-app.use("/api", ensureDbConnection);
-
 // Routes
 app.use("/api/student", studentRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/exam", examRoute);
 
-// Health check route (no DB needed)
 app.get("/", (req, res) => {
-  res.json({ message: "API is working!" });
+  return res.status(200).json({
+    success: true,
+    message: "Server of your Smart Restaurant is running...",
+  });
 });
 
 // Error handling middleware
@@ -85,6 +70,7 @@ if (process.env.NODE_ENV !== "production") {
     });
 } else {
   // For production (Vercel), don't connect at startup
+
   console.log("Running in serverless mode");
 }
 
