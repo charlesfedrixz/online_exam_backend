@@ -18,7 +18,7 @@ connectDB();
 app.use(
   cors({
     origin: [
-      "https://online-exam-lemon.vercel.app",
+      "https://online-exam-henna.vercel.app/",
       "https://online-exam-robinsarangthems-projects.vercel.app",
       "http://localhost:5173",
       "http://127.0.0.1:5173",
