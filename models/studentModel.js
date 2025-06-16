@@ -13,10 +13,6 @@ const studentSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    active: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,

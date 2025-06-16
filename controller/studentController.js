@@ -104,9 +104,9 @@ const deleteStudent = asyncHandler(async (req, res) => {
 });
 
 const listStudents = asyncHandler(async (req, res) => {
-  const students = await Student.find({ active: true });
+  const students = await Student.find({});
   if (students.length === 0) {
-    return res.status(404).json({ message: "No active students found." });
+    return res.status(200).json({ message: "No students found." });
   }
   res.status(200).json({ students });
 });
