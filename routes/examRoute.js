@@ -8,6 +8,7 @@ const {
   submitExam,
   deleteQuestion,
   showScore,
+  resultList,
 } = require("../controller/examController");
 
 examRoute.post("/create", createExam);
@@ -17,5 +18,6 @@ examRoute.delete("/delete/:id", deleteExam);
 examRoute.post("/submit/:examId", submitExam);
 examRoute.delete("/delete/:examId/:questionId", deleteQuestion);
 examRoute.get("/score/:resultId", showScore);
+examRoute.get("/resultList", resultList);
 
 module.exports = examRoute;

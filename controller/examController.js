@@ -216,6 +216,48 @@ const showScore = asyncHandler(async (req, res) => {
     answers: detailedAnswers,
   });
 });
+
+/**
+ * @desc    List all submitted exam results by all students, grouped by exam
+ * @route   GET /api/results
+ */
+const resultList = asyncHandler(async (req, res) => {
+  // Fetch all results, populate student and exam info
+  const results = await Result.find()
+    .populate("student")
+    .populate("exam", "title subject scheduledAt")
+    .sort({ createdAt: -1 });
+  console.log("result", results);
+  if (!results || results.length === 0) {
+    return res.status(200).json({ message: "No results found." });
+  }
+
+  // Group results by exam
+  const grouped = {};
+  results.forEach((result) => {
+    const examId = result.exam._id.toString();
+    if (!grouped[examId]) {
+      grouped[examId] = {
+        exam: result.exam,
+        submissions: [],
+      };
+    }
+    grouped[examId].submissions.push({
+      resultId: result._id,
+      student: {
+        _id: result._id,
+        studentName: result.student.studentName,
+        studentID: result.student.studentID,
+      },
+      score: result.score,
+      totalMarks: result.totalMarks,
+      submittedAt: result.createdAt,
+      answers: result.answers,
+    });
+  });
+
+  res.status(200).json({ data: Object.values(grouped) });
+});
 module.exports = {
   createExam,
   deleteExam,
@@ -224,4 +266,5 @@ module.exports = {
   submitExam,
   deleteQuestion,
   showScore, // <-- Export the new function
+  resultList,
 };

@@ -40,12 +40,18 @@ const loginStudent = asyncHandler(async (req, res) => {
       .status(401)
       .json({ message: "Invalid credentials.", data: student });
   }
+
+  // Set active to true when student logs in
+  student.active = true;
+  await student.save();
+
   res.status(200).json({
     message: "Login successful.",
     student: {
       id: student._id,
       studentID: student.studentID,
       studentName: student.studentName,
+      active: student.active,
       // Add other fields here if needed (email, class, etc.)
     },
   });
@@ -98,7 +104,10 @@ const deleteStudent = asyncHandler(async (req, res) => {
 });
 
 const listStudents = asyncHandler(async (req, res) => {
-  const students = await Student.find();
+  const students = await Student.find({ active: true });
+  if (students.length === 0) {
+    return res.status(404).json({ message: "No active students found." });
+  }
   res.status(200).json({ students });
 });
 
