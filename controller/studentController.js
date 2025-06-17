@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 
 // Register a new student
 const registerStudent = asyncHandler(async (req, res) => {
-  const { studentID, studentName } = req.body;
-  console.log(studentID, studentName);
-  if (!studentID || !studentName) {
+  const { studentID, studentName, course, email } = req.body;
+  console.log(studentID, studentName, course, email);
+  if (!studentID || !studentName || !course || !email) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
@@ -15,7 +15,7 @@ const registerStudent = asyncHandler(async (req, res) => {
     return res.status(409).json({ message: "Student already registered." });
   }
 
-  const student = new Student({ studentID, studentName });
+  const student = new Student({ studentID, studentName, course, email });
   await student.save();
 
   res.status(201).json({
@@ -66,7 +66,7 @@ const logoutStudent = asyncHandler(async (req, res) => {
 // Edit student
 const editStudent = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { newStudentID, newStudentName } = req.body;
+  const { newStudentID, newStudentName, newEmail, newCourse } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid student ID format." });
@@ -78,6 +78,8 @@ const editStudent = asyncHandler(async (req, res) => {
 
   if (newStudentID) student.studentID = newStudentID;
   if (newStudentName) student.studentName = newStudentName;
+  if (newEmail) student.email = newEmail;
+  if (newCourse) student.course = newCourse;
 
   await student.save();
 
