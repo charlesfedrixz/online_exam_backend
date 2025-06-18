@@ -235,6 +235,7 @@ const resultList = asyncHandler(async (req, res) => {
   // Group results by exam
   const grouped = {};
   results.forEach((result) => {
+    if (!result.student || !result.exam) return; // skip if missing
     const examId = result.exam._id.toString();
     if (!grouped[examId]) {
       grouped[examId] = {
@@ -245,7 +246,7 @@ const resultList = asyncHandler(async (req, res) => {
     grouped[examId].submissions.push({
       resultId: result._id,
       student: {
-        _id: result._id,
+        _id: result.student._id, // fixed: use result.student._id, not result._id
         studentName: result.student.studentName,
         studentID: result.student.studentID,
       },
